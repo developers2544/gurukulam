@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GuruKulam Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#000;--s1:#111;--s2:#1b1b1b;--ln:#2b2b2b;--red:#ff4b55;--org:#f9a03f;--tx:#fff4e8;--mu:#9e9488;--grn:#2bb673}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,"Noto Sans Devanagari",sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--bg);z-index:5}
+header b{font-size:18px;color:var(--org)}header span{flex:1}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
+nav button,.btn{background:var(--s2);color:var(--tx);border:1px solid var(--ln);border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer}
+nav button.on,.btn.p{background:var(--red);border-color:var(--red);color:#fff}.btn.d{color:var(--red)}
+main{max-width:980px;margin:0 auto;padding:8px 16px 80px}
+.card{background:var(--s1);border:1px solid var(--ln);border-radius:18px;padding:16px;margin:12px 0}
+label{display:block;font-size:12px;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{width:100%;background:var(--s2);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:10px;font:inherit}
+input[type=checkbox]{width:auto}textarea{min-height:90px;font-family:ui-monospace,monospace;font-size:13px}
+.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--ln)}.row .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{font-size:11px;border-radius:999px;padding:2px 10px;background:var(--s2);color:var(--mu)}.pill.g{background:#173d25;color:#6fd28f}.pill.o{background:#3a2e14;color:var(--org)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 14px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--s2);border:1px solid var(--ln);padding:12px 18px;border-radius:14px;display:none;gap:14px;align-items:center;z-index:9}
+.hint{color:var(--mu);font-size:12px}.err{color:var(--red)}
+</style>
+</head>
+<body>
+<header><b>GuruKulam Admin</b><span class="hint" id="who"></span><button class="btn" id="out" style="display:none">Logout</button></header>
+<main id="app"></main>
+<div id="toast"></div>
+<script>
+// ====== SIRF YE 3 LINE BADLO ======
+const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";   // anon key hi, service_role kabhi nahi
+const CDN_BASE = "https://cdn.yourdomain.com";
+// ==================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = (s, r = document) => r.querySelector(s);
+const app = $("#app");
+let me = null, tab = "content";
+
+const KINDS = ["music", "story", "movie", "status", "study", "wallpaper", "ringtone", "calendar"];
+const SCHEMA = {
+  content: { label: "Content", order: "created_at", list: ["kind", "title", "section", "is_premium", "published"], fields: [
+    { k: "kind", t: "select", o: KINDS }, { k: "title" }, { k: "subtitle" }, { k: "section", hint: "jaise: Subah ki aarti, Binaural, Baal geet" },
+    { k: "thumb_url", t: "upload", bucket: "public", folder: "thumbs", hint: "Poster/thumbnail (webp/jpg). Status image ho to wahi image." },
+    { k: "media_key", t: "upload", bucket: "auto", folder: "media", hint: "Video (mp4) / audio (mp3) / image. Premium tick ho to private bucket mein jayega." },
+    { k: "media_type", t: "select", o: ["video", "audio", "image"] },
+    { k: "is_premium", t: "bool" }, { k: "is_ai", t: "bool", hint: "AI se bani asli jaisi dikhne wali video ho to tick" },
+    { k: "sort", t: "num" }, { k: "published", t: "bool", hint: "Tick karne par hi users ko dikhega (pehle draft rakho)" }] },
+  banners: { label: "Banners", order: "sort", list: ["title", "target_type", "active"], fields: [
+    { k: "title" }, { k: "image_url", t: "upload", bucket: "public", folder: "banners", hint: "2:1 poster (jaise 1200x600)" },
+    { k: "target_type", t: "select", o: ["", "content", "list", "plans"] }, { k: "target_id", hint: "content id ya list ka kind (movie/story/study)" },
+    { k: "sort", t: "num" }, { k: "active", t: "bool" }] },
+  plans: { label: "Plans", order: "sort", list: ["id", "title", "price_inr", "active"], pk: "id", fields: [
+    { k: "id" }, { k: "title" }, { k: "subtitle" }, { k: "price_inr", t: "num" }, { k: "duration_days", t: "num" },
+    { k: "product_id", hint: "Play Console subscription ID" }, { k: "base_plan_prepaid" }, { k: "base_plan_auto" },
+    { k: "super_chats", t: "num" }, { k: "frames", t: "num" },
+    { k: "video_url", t: "upload", bucket: "public", folder: "plans", hint: "Plan ke upar ki instruction video (mp4)" },
+    { k: "benefits", t: "json", hint: 'Jaise: [{"title":"Saari movies","text":"Unlimited","image_url":"https://..."}]' },
+    { k: "sort", t: "num" }, { k: "active", t: "bool" }] },
+  grid_tiles: { label: "Home tiles", order: "sort", list: ["key", "label_en", "route", "active"], pk: "key", fields: [
+    { k: "key" }, { k: "label_en" }, { k: "label_hi" }, { k: "icon", t: "select", o: ["film", "book", "music", "status", "wall", "study", "calendar", "star"] },
+    { k: "color_from" }, { k: "color_to" }, { k: "route", hint: "list/movie, list/story, list/study, music, feed/0, others" },
+    { k: "sort", t: "num" }, { k: "active", t: "bool" }] },
+  polls: { label: "Polls", order: "id", list: ["question", "active"], fields: [{ k: "question" }, { k: "active", t: "bool" }, { k: "ends_at", hint: "optional, jaise 2026-11-30T23:59:00+05:30" }], after: "options" },
+  app_config: { label: "Config", order: "key", list: ["key", "value"], pk: "key", fields: [{ k: "key" }, { k: "value", t: "json", hint: 'chat_mode: "auto" | "open" | "closed"' }] },
+};
+
+// ---------- helpers ----------
+function toast(msg, undo) {
+  const t = $("#toast"); t.innerHTML = ""; t.style.display = "flex";
+  const s = document.createElement("span"); s.textContent = msg; t.append(s);
+  if (undo) { const b = document.createElement("button"); b.className = "btn"; b.textContent = "Undo"; b.onclick = () => { undo(); t.style.display = "none"; }; t.append(b); }
+  clearTimeout(toast.h); toast.h = setTimeout(() => (t.style.display = "none"), undo ? 10000 : 3000);
+}
+const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+async function fnCall(name, body) {
+  const { data: { session } } = await sb.auth.getSession();
+  const r = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}`, apikey: SUPABASE_ANON_KEY }, body: JSON.stringify(body) });
+  const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status); return j;
+}
+// Upload: type aur size check -> signed link -> seedha R2 mein PUT
+async function upload(file, bucket, folder) {
+  if (!/\.(mp4|webp|jpg|jpeg|png|mp3|m4a)$/i.test(file.name)) throw new Error("Sirf mp4, webp, jpg, png, mp3, m4a allowed");
+  if (file.size > 600 * 1024 * 1024) throw new Error("File 600MB se badi hai. Pehle HandBrake se compress karo.");
+  const safe = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+  const key = `${folder}/${Date.now()}-${safe}`;
+  const j = await fnCall("admin-sign-upload", { bucket, key });
+  const r = await fetch(j.uploadUrl, { method: "PUT", body: file });
+  if (!r.ok) throw new Error("Upload fail (" + r.status + "). R2 CORS check karo.");
+  return j;
+}
+
+// ---------- auth ----------
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return loginView();
+  const { data: p } = await sb.from("profiles").select("is_admin,display_name").eq("id", session.user.id).maybeSingle();
+  if (!p?.is_admin) { app.innerHTML = '<div class="card err">Ye account admin nahi hai.</div>'; $("#out").style.display = ""; return; }
+  me = session.user; $("#who").textContent = me.email; $("#out").style.display = "";
+  shell();
+}
+$("#out").onclick = async () => { await sb.auth.signOut(); location.reload(); };
+function loginView() {
+  app.innerHTML = `<div class="card" style="max-width:420px;margin:40px auto"><h3>Admin login</h3>
+  <label>Email</label><input id="em" type="email"><label>Password</label><input id="pw" type="password">
+  <p class="err" id="le"></p><button class="btn p" id="go">Login</button>
+  <p class="hint">Admin user pehle Supabase Dashboard > Authentication mein banao, phir schema.sql ke neeche wali line se is_admin = true karo.</p></div>`;
+  $("#go").onclick = async () => {
+    const { error } = await sb.auth.signInWithPassword({ email: $("#em").value.trim(), password: $("#pw").value });
+    if (error) $("#le").textContent = error.message; else boot();
+  };
+}
+
+// ---------- shell ----------
+function shell() {
+  const tabs = [...Object.keys(SCHEMA), "chat"];
+  app.innerHTML = `<nav>${tabs.map((t) => `<button data-t="${t}" class="${t === tab ? "on" : ""}">${SCHEMA[t]?.label || "Chat"}</button>`).join("")}</nav><div id="view"></div>`;
+  app.querySelectorAll("nav button").forEach((b) => (b.onclick = () => { tab = b.dataset.t; shell(); }));
+  tab === "chat" ? chatView() : tableView(tab);
+}
+
+// ---------- generic table view ----------
+async function tableView(name, editing) {
+  const S = SCHEMA[name], pk = S.pk || "id", v = $("#view");
+  const { data, error } = await sb.from(name).select("*").order(S.order, { ascending: name === "banners" || name === "plans" || name === "grid_tiles" || name === "app_config" }).limit(300);
+  if (error) { v.innerHTML = `<div class="card err">${esc(error.message)}</div>`; return; }
+  v.innerHTML = `<div class="card"><button class="btn p" id="new">+ Naya</button>
+    <div id="rows">${data.map((r) => `<div class="row" data-id="${esc(r[pk])}"><div class="t">${S.list.map((k) => typeof r[k] === "boolean" ? `<span class="pill ${r[k] ? "g" : ""}">${k}${r[k] ? "" : ": no"}</span>` : esc(typeof r[k] === "object" ? JSON.stringify(r[k]) : r[k])).join(" &middot; ")}</div>
+    <button class="btn" data-a="edit">Edit</button><button class="btn d" data-a="del">Delete</button></div>`).join("") || '<p class="hint">Abhi kuch nahi hai.</p>'}</div></div><div id="form"></div>`;
+  $("#new").onclick = () => form(name, null);
+  v.querySelectorAll(".row").forEach((el) => {
+    const row = data.find((r) => String(r[pk]) === el.dataset.id);
+    el.querySelector('[data-a="edit"]').onclick = () => form(name, row);
+    el.querySelector('[data-a="del"]').onclick = () => {
+      el.style.display = "none"; let undone = false;
+      toast("Delete ho raha hai (10 second mein Undo kar sakte ho)", () => { undone = true; el.style.display = ""; });
+      setTimeout(async () => { if (undone) return; const { error: e } = await sb.from(name).delete().eq(pk, row[pk]); if (e) { toast(e.message); el.style.display = ""; } }, 10000);
+    };
+  });
+  if (editing) form(name, editing);
+}
+
+function form(name, row) {
+  const S = SCHEMA[name], pk = S.pk || "id", box = $("#form"), draftKey = `draft:${name}:${row ? row[pk] : "new"}`;
+  const saved = !row && localStorage.getItem(draftKey);
+  const val = row ? { ...row } : saved ? JSON.parse(saved) : { published: false, active: true };
+  box.innerHTML = `<div class="card"><h3>${row ? "Edit" : "Naya"} ${S.label}</h3><div class="grid">${S.fields.map((f) => {
+    const v = val[f.k]; const hint = f.hint ? `<div class="hint">${esc(f.hint)}</div>` : "";
+    if (f.t === "bool") return `<div><label><input type="checkbox" data-k="${f.k}" ${v ? "checked" : ""}> ${f.k}</label>${hint}</div>`;
+    if (f.t === "select") return `<div><label>${f.k}</label><select data-k="${f.k}">${f.o.map((o) => `<option ${o === v ? "selected" : ""}>${o}</option>`).join("")}</select>${hint}</div>`;
+    if (f.t === "json") return `<div style="grid-column:1/-1"><label>${f.k}</label><textarea data-k="${f.k}" data-json="1">${esc(v === undefined ? "" : JSON.stringify(v, null, 2))}</textarea>${hint}</div>`;
+    if (f.t === "upload") return `<div style="grid-column:1/-1"><label>${f.k}</label><input data-k="${f.k}" value="${esc(v)}" placeholder="link / path"><input type="file" data-up="${f.k}" style="margin-top:6px"><div class="hint" data-st="${f.k}"></div>${hint}</div>`;
+    return `<div><label>${f.k}</label><input data-k="${f.k}" ${f.t === "num" ? 'type="number"' : ""} value="${esc(v)}" ${row && f.k === pk ? "readonly" : ""}>${hint}</div>`;
+  }).join("")}</div><p class="err" id="fe"></p>
+  <button class="btn p" id="save">Save</button> <button class="btn" id="cancel">Band karo</button></div>
+  ${name === "polls" && row ? '<div id="opts"></div>' : ""}`;
+  box.scrollIntoView({ behavior: "smooth" });
+  box.querySelectorAll("[data-k]").forEach((el) => (el.oninput = () => { if (!row) localStorage.setItem(draftKey, JSON.stringify(collect(box, S))); })); // draft auto-save
+  box.querySelectorAll("[data-up]").forEach((inp) => (inp.onchange = async () => {
+    const f = S.fields.find((x) => x.k === inp.dataset.up), st = box.querySelector(`[data-st="${f.k}"]`), file = inp.files[0]; if (!file) return;
+    try {
+      st.textContent = "Upload ho raha hai…";
+      const premium = box.querySelector('[data-k="is_premium"]')?.checked;
+      const bucket = f.bucket === "auto" ? (premium ? "premium" : "public") : f.bucket;
+      const j = await upload(file, bucket, f.folder);
+      box.querySelector(`[data-k="${f.k}"]`).value = f.k === "media_key" ? j.key : (j.publicUrl || j.key);
+      if (f.k === "media_key") { const mt = /\.(mp3|m4a)$/i.test(file.name) ? "audio" : /\.(mp4)$/i.test(file.name) ? "video" : "image"; box.querySelector('[data-k="media_type"]').value = mt; }
+      st.textContent = "Upload ho gaya ✓"; if (!row) localStorage.setItem(draftKey, JSON.stringify(collect(box, S)));
+    } catch (e) { st.textContent = ""; $("#fe").textContent = e.message; }
+  }));
+  $("#cancel").onclick = () => (box.innerHTML = "");
+  $("#save").onclick = async () => {
+    try {
+      const out = collect(box, S, true);
+      if (out.published === true && !confirm("Ye content users ko dikhne lagega. Publish karna hai?")) return;
+      const q = row ? sb.from(name).update(out).eq(pk, row[pk]) : sb.from(name).insert(out);
+      const { error } = await q; if (error) throw error;
+      localStorage.removeItem(draftKey); toast("Save ho gaya ✓"); tableView(name);
+    } catch (e) { $("#fe").textContent = e.message || String(e); }
+  };
+  if (name === "polls" && row) optionsView(row.id);
+}
+function collect(box, S, strict) {
+  const out = {};
+  box.querySelectorAll("[data-k]").forEach((el) => {
+    const k = el.dataset.k;
+    if (el.type === "checkbox") out[k] = el.checked;
+    else if (el.dataset.json) { const t = el.value.trim(); if (t) { try { out[k] = JSON.parse(t); } catch { if (strict) throw new Error(k + ": JSON galat hai"); } } }
+    else if (el.type === "number") out[k] = el.value === "" ? 0 : Number(el.value);
+    else out[k] = el.value === "" ? null : el.value;
+  });
+  return out;
+}
+
+// ---------- poll options ----------
+async function optionsView(pollId) {
+  const box = $("#opts"), { data } = await sb.from("poll_options").select("*").eq("poll_id", pollId).order("id");
+  box.innerHTML = `<div class="card"><h3>Options</h3>${(data || []).map((o) => `<div class="row"><div class="t">${esc(o.label)} <span class="pill">${o.votes} votes</span></div><button class="btn d" data-d="${o.id}">Delete</button></div>`).join("")}
+  <label>Naya option</label><input id="ol"><br><br><button class="btn p" id="oa">Add</button></div>`;
+  $("#oa").onclick = async () => { const l = $("#ol").value.trim(); if (!l) return; await sb.from("poll_options").insert({ poll_id: pollId, label: l }); optionsView(pollId); };
+  box.querySelectorAll("[data-d]").forEach((b) => (b.onclick = async () => { await sb.from("poll_options").delete().eq("id", b.dataset.d); optionsView(pollId); }));
+}
+
+// ---------- chat moderation ----------
+async function chatView() {
+  const v = $("#view");
+  const { data } = await sb.from("chat_messages").select("*").order("id", { ascending: false }).limit(100);
+  const { data: reps } = await sb.from("chat_reports").select("message_id");
+  const reported = new Set((reps || []).map((r) => r.message_id));
+  v.innerHTML = `<div class="card"><h3>Admin message (sabko dikhega)</h3>
+   <select id="ar"><option value="world">Discussion</option><option value="child">About Child</option></select><br><br>
+   <textarea id="am" style="min-height:60px"></textarea><br><br><button class="btn p" id="asend">Bhejo</button></div>
+   <div class="card"><h3>Pichhle 100 messages</h3>${(data || []).map((m) => `<div class="row"><div class="t" style="white-space:normal">
+   <span class="pill ${m.kind === "super" ? "o" : ""}">${m.kind}</span> <span class="pill">${m.room}</span> ${m.visibility === "admin" ? '<span class="pill g">sirf admin</span>' : ""}
+   ${reported.has(m.id) ? '<span class="pill" style="color:var(--red)">reported</span>' : ""} <b>${esc(m.author_name)}</b>: ${esc(m.body)} ${m.deleted ? "<i>(deleted)</i>" : ""}</div>
+   <button class="btn d" data-del="${m.id}">Delete</button><button class="btn" data-ban="${m.user_id}">Ban</button></div>`).join("")}</div>`;
+  $("#asend").onclick = async () => {
+    const body = $("#am").value.trim(); if (!body) return;
+    const { error } = await sb.from("chat_messages").insert({ user_id: me.id, room: $("#ar").value, body, kind: "admin", visibility: "public", author_name: "Admin" });
+    if (error) toast(error.message); else chatView();
+  };
+  v.querySelectorAll("[data-del]").forEach((b) => (b.onclick = async () => { await sb.from("chat_messages").update({ deleted: true }).eq("id", b.dataset.del); chatView(); }));
+  v.querySelectorAll("[data-ban]").forEach((b) => (b.onclick = async () => { if (!confirm("Is user ko chat se ban karna hai?")) return; await sb.from("profiles").update({ banned: true }).eq("id", b.dataset.ban); toast("Ban ho gaya"); }));
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GuruKulam</string>
+    <string name="tagline">Culture, stories and music — all in one place</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="login_note">We only use your Google account to sign you in. No phone number needed.</string>
+    <string name="login_error">Sign-in failed. Check your internet and try again.</string>
+    <string name="no_google_account">Add a Google account on this phone and try again.</string>
+    <string name="search_hint">Search Krishna, aarti, stories…</string>
+    <string name="retry">Retry</string>
+    <string name="loading_error">Something went wrong</string>
+    <string name="empty_list">Nothing here yet</string>
+    <string name="back">Back</string>
+
+    <string name="tile_movies">Movies</string>
+    <string name="tile_stories">Kahaniyan</string>
+    <string name="tile_music">Music</string>
+    <string name="tile_status">Status</string>
+    <string name="tile_others">Others</string>
+    <string name="tile_study">Study</string>
+
+    <string name="chat_band_open">Saturday Chat is open</string>
+    <string name="chat_band_closed">Saturday Chat opens on Saturday</string>
+    <string name="chip_open">Open</string>
+    <string name="chip_sat">Sat</string>
+    <string name="status_today">Today\'s Status</string>
+    <string name="music_title">Music</string>
+    <string name="all">All</string>
+    <string name="ai_label">AI-made story</string>
+    <string name="now_playing">Now playing</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="sleep_off">Off</string>
+    <string name="minutes_fmt">%d min</string>
+    <string name="share">Share</string>
+    <string name="whatsapp_status">Set as WhatsApp status</string>
+    <string name="whatsapp_missing">WhatsApp is not installed</string>
+
+    <string name="others_title">Others</string>
+    <string name="tab_wallpaper">Wallpaper</string>
+    <string name="tab_ringtone">Ringtone</string>
+    <string name="tab_calendar">Calendar</string>
+    <string name="set_wallpaper">Set wallpaper</string>
+    <string name="set_live_wallpaper">Set live wallpaper</string>
+    <string name="set_ringtone">Set ringtone</string>
+    <string name="done">Done!</string>
+    <string name="allow_write_settings">Allow \"Modify system settings\" for GuruKulam, then tap again.</string>
+    <string name="failed">Couldn\'t do that. Try again.</string>
+    <string name="working">Please wait…</string>
+
+    <string name="plans_title">Membership</string>
+    <string name="plan_buy">Buy for %s</string>
+    <string name="plan_active_until">Active until %s</string>
+    <string name="plan_autopay">Auto-renew (autopay)</string>
+    <string name="plan_oneoff">One-time payment. It will not renew automatically.</string>
+    <string name="plan_autopay_note">%1$s will be charged every %2$s until you cancel. Cancel anytime: Play Store > Payments &amp; subscriptions > Subscriptions.</string>
+    <string name="period_month">month</string>
+    <string name="period_year">year</string>
+    <string name="plan_super">%d Super Chats</string>
+    <string name="plan_frames">%d VIP profile frames</string>
+    <string name="plan_all">All premium content unlocked</string>
+    <string name="plan_duration_fmt">Valid for %d days</string>
+    <string name="purchase_ok">Membership activated 🎉</string>
+    <string name="purchase_pending">Payment is pending. It will activate automatically.</string>
+    <string name="purchase_cancel">Payment cancelled</string>
+    <string name="purchase_error">Payment problem. If money was deducted, tap Restore purchase.</string>
+    <string name="restore">Restore purchase</string>
+    <string name="premium_content">Premium</string>
+
+    <string name="settings">Settings</string>
+    <string name="membership_card_title">GuruKulam Membership</string>
+    <string name="free_member">Free member</string>
+    <string name="valid_till">Valid till %s</string>
+    <string name="credits_fmt">Super Chats: %1$d  •  Frames: %2$d</string>
+    <string name="language">Language</string>
+    <string name="lang_en">English</string>
+    <string name="lang_hi">हिंदी</string>
+    <string name="notify_time">Daily reminder time</string>
+    <string name="manage_sub">Manage subscription</string>
+    <string name="privacy">Privacy policy</string>
+    <string name="logout">Log out</string>
+    <string name="delete_account">Delete my account</string>
+    <string name="delete_confirm">This will permanently delete your account and data. This cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
+    <string name="chat_title">Saturday Chat</string>
+    <string name="chat_tab_child">About Child</string>
+    <string name="chat_tab_world">Discussion</string>
+    <string name="chat_hint">Write a message (no photos)</string>
+    <string name="chat_visible_all">Everyone can see</string>
+    <string name="chat_visible_admin">Only admin</string>
+    <string name="chat_closed">Chat opens on Saturday. Vote in the poll meanwhile.</string>
+    <string name="chat_super">Super Chat (%d left)</string>
+    <string name="chat_child_tip">Please do not share your child\'s name or photo.</string>
+    <string name="chat_no_credit">No Super Chat left. Get a membership.</string>
+    <string name="chat_slow">Please wait a few seconds before sending again.</string>
+    <string name="poll_title">Community poll</string>
+    <string name="voted">Thanks for voting!</string>
+    <string name="report">Report</string>
+    <string name="reported">Reported. Thank you.</string>
+</resources>

@@ -1,0 +1,8 @@
+[
+  {
+    "AllowedOrigins": ["https://YOUR-ADMIN-DOMAIN.pages.dev"],
+    "AllowedMethods": ["PUT", "GET", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3600
+  }
+]

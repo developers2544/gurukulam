@@ -1,0 +1,7 @@
+# Is file ko "local.properties" naam se copy karke apni values bharo. (local.properties ko kabhi git/zip mein share mat karo)
+sdk.dir=C\:\\Users\\YOU\\AppData\\Local\\Android\\Sdk
+SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+GOOGLE_WEB_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+CDN_BASE=https://cdn.yourdomain.com
+PRIVACY_URL=https://yourdomain.com/privacy

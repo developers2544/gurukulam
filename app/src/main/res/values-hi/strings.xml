@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GuruKulam</string>
+    <string name="tagline">संस्कार, कहानियाँ और संगीत — एक ही जगह</string>
+    <string name="continue_google">Google से जारी रखें</string>
+    <string name="login_note">सिर्फ़ लॉगिन के लिए Google अकाउंट। मोबाइल नंबर की ज़रूरत नहीं।</string>
+    <string name="login_error">लॉगिन नहीं हुआ। इंटरनेट देखकर दोबारा कोशिश करें।</string>
+    <string name="no_google_account">फ़ोन में Google अकाउंट जोड़कर दोबारा कोशिश करें।</string>
+    <string name="search_hint">कृष्ण, आरती, कहानी खोजें</string>
+    <string name="retry">दोबारा</string>
+    <string name="loading_error">कुछ गड़बड़ हो गई</string>
+    <string name="empty_list">अभी कुछ नहीं है</string>
+    <string name="back">पीछे</string>
+
+    <string name="tile_movies">मूवीज़</string>
+    <string name="tile_stories">कहानियाँ</string>
+    <string name="tile_music">म्यूज़िक</string>
+    <string name="tile_status">स्टेटस</string>
+    <string name="tile_others">अन्य</string>
+    <string name="tile_study">स्टडी</string>
+
+    <string name="chat_band_open">शनिवार चैट खुली है</string>
+    <string name="chat_band_closed">शनिवार चैट शनिवार को खुलेगी</string>
+    <string name="chip_open">खुला</string>
+    <string name="chip_sat">शनि</string>
+    <string name="status_today">आज का स्टेटस</string>
+    <string name="music_title">म्यूज़िक</string>
+    <string name="all">सब</string>
+    <string name="ai_label">AI से बनी कहानी</string>
+    <string name="now_playing">अभी चल रहा है</string>
+    <string name="sleep_timer">स्लीप टाइमर</string>
+    <string name="sleep_off">बंद</string>
+    <string name="minutes_fmt">%d मिनट</string>
+    <string name="share">शेयर</string>
+    <string name="whatsapp_status">WhatsApp स्टेटस लगाएं</string>
+    <string name="whatsapp_missing">WhatsApp इंस्टॉल नहीं है</string>
+
+    <string name="others_title">अन्य</string>
+    <string name="tab_wallpaper">वॉलपेपर</string>
+    <string name="tab_ringtone">रिंगटोन</string>
+    <string name="tab_calendar">कैलेंडर</string>
+    <string name="set_wallpaper">वॉलपेपर लगाएं</string>
+    <string name="set_live_wallpaper">लाइव वॉलपेपर लगाएं</string>
+    <string name="set_ringtone">रिंगटोन लगाएं</string>
+    <string name="done">हो गया!</string>
+    <string name="allow_write_settings">GuruKulam को \"Modify system settings\" की अनुमति दें, फिर दोबारा दबाएं।</string>
+    <string name="failed">नहीं हो पाया। दोबारा कोशिश करें।</string>
+    <string name="working">थोड़ा रुकिए…</string>
+
+    <string name="plans_title">मेंबरशिप</string>
+    <string name="plan_buy">%s में लें</string>
+    <string name="plan_active_until">%s तक चालू</string>
+    <string name="plan_autopay">ऑटो-रिन्यू (ऑटोपे)</string>
+    <string name="plan_oneoff">एक बार का पेमेंट। अपने-आप रिन्यू नहीं होगा।</string>
+    <string name="plan_autopay_note">जब तक आप रद्द नहीं करते, हर %2$s %1$s कटेंगे। कभी भी रद्द करें: Play Store > Payments &amp; subscriptions > Subscriptions।</string>
+    <string name="period_month">महीने</string>
+    <string name="period_year">साल</string>
+    <string name="plan_super">%d सुपर चैट</string>
+    <string name="plan_frames">%d VIP प्रोफ़ाइल फ्रेम</string>
+    <string name="plan_all">सारा प्रीमियम कंटेंट अनलॉक</string>
+    <string name="plan_duration_fmt">%d दिन के लिए मान्य</string>
+    <string name="purchase_ok">मेंबरशिप चालू हो गई 🎉</string>
+    <string name="purchase_pending">पेमेंट पेंडिंग है। अपने-आप चालू हो जाएगा।</string>
+    <string name="purchase_cancel">पेमेंट रद्द हुआ</string>
+    <string name="purchase_error">पेमेंट में दिक्कत। पैसे कटे हों तो पेमेंट रिस्टोर करें दबाएं।</string>
+    <string name="restore">पेमेंट रिस्टोर करें</string>
+    <string name="premium_content">प्रीमियम</string>
+
+    <string name="settings">सेटिंग्स</string>
+    <string name="membership_card_title">GuruKulam मेंबरशिप</string>
+    <string name="free_member">फ्री मेंबर</string>
+    <string name="valid_till">%s तक मान्य</string>
+    <string name="credits_fmt">सुपर चैट: %1$d  •  फ्रेम: %2$d</string>
+    <string name="language">भाषा</string>
+    <string name="lang_en">English</string>
+    <string name="lang_hi">हिंदी</string>
+    <string name="notify_time">रोज़ की याद दिलाने का समय</string>
+    <string name="manage_sub">सब्सक्रिप्शन मैनेज करें</string>
+    <string name="privacy">प्राइवेसी पॉलिसी</string>
+    <string name="logout">लॉग आउट</string>
+    <string name="delete_account">मेरा अकाउंट डिलीट करें</string>
+    <string name="delete_confirm">आपका अकाउंट और डेटा हमेशा के लिए डिलीट हो जाएगा। इसे वापस नहीं लाया जा सकता।</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="delete">डिलीट</string>
+
+    <string name="chat_title">शनिवार चैट</string>
+    <string name="chat_tab_child">बच्चे के बारे में</string>
+    <string name="chat_tab_world">चर्चा</string>
+    <string name="chat_hint">संदेश लिखें (फोटो नहीं)</string>
+    <string name="chat_visible_all">सबको दिखे</string>
+    <string name="chat_visible_admin">सिर्फ़ एडमिन</string>
+    <string name="chat_closed">चैट शनिवार को खुलेगी। तब तक पोल में वोट करें।</string>
+    <string name="chat_super">सुपर चैट (%d बची)</string>
+    <string name="chat_child_tip">कृपया बच्चे का नाम या फोटो साझा न करें।</string>
+    <string name="chat_no_credit">सुपर चैट नहीं बची। मेंबरशिप लें।</string>
+    <string name="chat_slow">दोबारा भेजने से पहले कुछ सेकंड रुकिए।</string>
+    <string name="poll_title">कम्युनिटी पोल</string>
+    <string name="voted">वोट के लिए धन्यवाद!</string>
+    <string name="report">रिपोर्ट</string>
+    <string name="reported">रिपोर्ट हो गया। धन्यवाद।</string>
+</resources>
