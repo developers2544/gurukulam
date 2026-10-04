@@ -4,3 +4,10 @@ build/
 *.jks
 google-services.json
 .idea/
+# Secrets (kabhi git mein nahi)
+*.keystore
+*service-account*.json
+*-adminsdk-*.json
+.env
+.env.*
+supabase/.temp/

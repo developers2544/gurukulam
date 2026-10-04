@@ -110,7 +110,7 @@ class Supa(ctx: Context) {
             val b = Request.Builder()
                 .url(base + path)
                 .header("apikey", anon)
-                .header("Authorization", "Bearer ${tk ?: anon}")
+                if (tk != null) b.header("Authorization", "Bearer $tk")
             extra.forEach { (k, v) -> b.header(k, v) }
             val rb = (body ?: "").toRequestBody("application/json".toMediaType())
             if (method == "GET") b.get() else b.method(method, rb)
